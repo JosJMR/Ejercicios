@@ -21,6 +21,16 @@ nodo *crearnodo(char pw){
 	return nuevo;
 }
 
+void crearArchivo(){
+    
+    file = fopen("mensaje.txt","wt");
+    if(file==NULL){
+        printf("Archivo inexistente");
+    }else{
+        fprintf(file, "Hola a todos este programa es clasificado para el profe Karim");
+    }
+    fclose(file);
+}
 void insertar(char pw){
     nodo *nuevo = crearnodo(pw);
     if(inicio==NULL){
@@ -45,6 +55,41 @@ void recorrer(){
     }
 }
 
+void encriptado(){
+    FILE *encript;
+    file = fopen("mensaje.txt", "w+");
+    char caracter;
+    int suma=0;
+    nodo *aux = inicio;
+    while(feof(file)==0){
+        caracter = fgetc(file);
+        if (file==NULL)
+        exit(1);
+        int pas = aux->pw;
+        int ff = caracter;
+        int encription = ff-pas;
+        fwrite(&encription, sizeof(encription), 1, file);
+        aux = aux->siguiente;
+    }
+    fclose(file);
+}
+
+void desencriptado(){
+    file = fopen("mensaje.txt", "r+");
+    char caracter;
+    int suma=0;
+    nodo *aux = inicio;
+    while(feof(file)==0){
+        caracter = fgetc(file);
+        int pas = aux->pw;
+        int ff = caracter;
+        int encript = caracter-pas;
+        fwrite(&encript, sizeof(encript), 1, file);
+        aux = aux->siguiente;
+    }
+    fclose(file);
+}
+
 int main(){
     int o=0;
     char password[20];
@@ -67,10 +112,11 @@ int main(){
     }
     fclose(file);
     file = fopen("mensaje.txt", "rb");
-    char caracter;
+    char cars;
     while(feof(file)==0){
-        caracter = fgetc(file);
-
+        cars = fgetc(file);
+        //printf("%d", caracter);
     }
+    encriptado();
     return 0;
 }
